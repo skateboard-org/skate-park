@@ -4,7 +4,7 @@ import { CallableContext } from "firebase-functions/lib/providers/https";
 const db = firebase.firestore();
 
 const onRemoveBot = (data: any, context: CallableContext) => {
-  let botName = data.botName || "";
+  const botName = data.botName || "";
 
   if (!(typeof botName === "string") || botName.length === 0) {
     // Throwing an HttpsError so that the client gets the error details.

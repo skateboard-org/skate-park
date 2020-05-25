@@ -4,7 +4,7 @@ import { CallableContext } from "firebase-functions/lib/providers/https";
 const db = firebase.firestore();
 
 const onGetMyBots = async (data: any, context: CallableContext) => {
-  let userId = data.userId || "";
+  const userId = data.userId || "";
 
   if (!(typeof userId === "string") || userId.length === 0) {
     // Throwing an HttpsError so that the client gets the error details.

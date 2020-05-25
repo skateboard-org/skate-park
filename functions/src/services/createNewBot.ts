@@ -5,8 +5,8 @@ import * as firebase from "firebase-admin";
 import { CallableContext } from "firebase-functions/lib/providers/https";
 const db = firebase.firestore();
 
-const onCreateNewBot = (data: any, context: CallableContext) => {
-  let bot = data.bot || null;
+const onCreateNewBot = async (data: any, context: CallableContext) => {
+  const bot = data.bot || null;
 
   console.log(bot);
 
@@ -58,23 +58,21 @@ const onCreateNewBot = (data: any, context: CallableContext) => {
   // [END authIntegration]
 
   // const channelRef = db.collection('channels').doc(channelId);
-  const newBotDoc = db
-    .collection("bots")
-    .doc(newBot.name)
-    .set(Object.assign({}, newBot));
 
-  return Promise.all([newBotDoc])
-    .then((res) => {
-      console.log("subscribing to: ", res);
-      return {
-        botName: newBot.name,
-        error: false,
-        message: "bot added",
-      };
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+  try {
+    await db.collection("bots").doc(newBot.name).set(Object.assign({}, newBot));
+
+    return {
+      botName: newBot.name,
+      error: false,
+      message: "bot added",
+    };
+  } catch (err) {
+    console.log(err);
+N    return {
+      error: true,
+    };
+  }
 };
 
 export default onCreateNewBot;

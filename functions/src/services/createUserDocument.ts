@@ -1,14 +1,15 @@
 import * as firebase from "firebase-admin";
 const db = firebase.firestore();
 
-const onCreateUserDocument = (user: { uid: string }) => {
+const onCreateUserDocument = async (user: { uid: string }) => {
   const userRef = db.collection("users").doc(user.uid);
-  const userDocument = userRef.set({
+  const userDocument = await userRef.set({
     bots: [],
   });
-  return Promise.all([userDocument]).then((res) => {
-    return console.log("Creating User Document: ", res);
-  });
+  return {
+    success: true,
+  };
+  console.log("Creating User Document: ", userDocument);
 };
 
 export default onCreateUserDocument;

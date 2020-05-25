@@ -3,7 +3,7 @@ import * as firebase from "firebase-admin";
 import { CallableContext } from "firebase-functions/lib/providers/https";
 const db = firebase.firestore();
 
-const onGetMyBots = (data: any, context: CallableContext) => {
+const onGetMyBots = async (data: any, context: CallableContext) => {
   let userId = data.userId || "";
 
   if (!(typeof userId === "string") || userId.length === 0) {
@@ -32,22 +32,34 @@ const onGetMyBots = (data: any, context: CallableContext) => {
 
   // [END authIntegration]
 
-  const userRef = db.collection("users").doc(userId);
+  try {
+    const userRef = db.collection("users").doc(userId);
 
-  const myBots = userRef.get().then((doc) => {
-    return doc.data();
-  });
-
-  return Promise.all([myBots])
-    .then((res) => {
-      return {
-        error: false,
-        data: res[0],
-      };
-    })
-    .catch((err) => {
-      console.log(err);
+    const myBotNames = await userRef.get().then((doc) => {
+      return doc.data();
     });
+
+    const snapshot = await db.collection("bots").get();
+    let myBots: any[] = [];
+    if (myBotNames !== undefined && myBotNames.bots.length > 0) {
+      console.log(myBotNames.bots);
+      myBots = snapshot.docs
+        .filter((doc) => myBotNames.bots.includes(doc.id))
+        .map((doc) => doc.data());
+    }
+
+    console.log(myBots);
+
+    return {
+      error: false,
+      data: myBots,
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      error: true,
+    };
+  }
 };
 
 export default onGetMyBots;

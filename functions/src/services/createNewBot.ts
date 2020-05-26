@@ -69,7 +69,7 @@ const onCreateNewBot = async (data: any, context: CallableContext) => {
     };
   } catch (err) {
     console.log(err);
-N    return {
+    return {
       error: true,
     };
   }

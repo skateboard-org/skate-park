@@ -8,12 +8,18 @@ firebase.initializeApp({
   databaseURL: "https://skate-board.firebaseio.com",
 });
 
+
 import onCreateUserDocument from "./services/createUserDocument";
 import onGetMyBots from "./services/getMyBots";
 import onAddBot from "./services/addBot";
 import onRemoveBot from "./services/removeBot";
 import onCreateNewBot from "./services/createNewBot";
 import onGetAllBots from "./services/getAllBots";
+import onGetBot from "./services/getBot";
+import onGetBotSubscriptionStatus from "./services/getBotSubscriptionStatus";
+
+const cors = require('cors');
+cors({origin: true});
 
 export const createUserDocument = functions.auth
   .user()
@@ -24,3 +30,5 @@ export const addBot = functions.https.onCall(onAddBot);
 export const removeBot = functions.https.onCall(onRemoveBot);
 export const createNewBot = functions.https.onCall(onCreateNewBot);
 export const getAllBots = functions.https.onCall(onGetAllBots);
+export const getBot = functions.https.onCall(onGetBot);
+export const getBotSubscriptionStatus = functions.https.onCall(onGetBotSubscriptionStatus);
